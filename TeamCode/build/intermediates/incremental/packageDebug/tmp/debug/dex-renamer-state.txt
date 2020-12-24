@@ -1,0 +1,4 @@
+#Sat Feb 29 12:55:05 PST 2020
+base.0=/Users/maudieguez/OneDrive - uabc.edu.mx/SkyStone-master/TeamCode/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
