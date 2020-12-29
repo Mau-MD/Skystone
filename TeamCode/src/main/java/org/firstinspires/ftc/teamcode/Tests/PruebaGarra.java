@@ -104,9 +104,15 @@ public class PruebaGarra extends LinearOpMode {
             codoPos = Range.clip(codoPos,0.0,1.0);
             manoPos = Range.clip(manoPos, 0.0, 1.0);
 
+            telemetry.addData("Brazo Power: ", brazoPower);
+            telemetry.addData("Codo Pos: ", codoPos);
+            telemetry.addData("Mano Pos: ", manoPos);
+            telemetry.update();
+
             codo.setPosition(codoPos);
             mano.setPosition(manoPos);
             brazo.setPower(brazoPower);
+
 
         }
     }
