@@ -45,10 +45,13 @@ public class PruebaGarra extends LinearOpMode {
     DcMotor brazo;
     Servo codo;
     Servo mano;
+
     ElapsedTime dpadArriba = new ElapsedTime();
     ElapsedTime dpadAbajo = new ElapsedTime();
     ElapsedTime dpadIzquierda = new ElapsedTime();
     ElapsedTime dpadDerecha = new ElapsedTime();
+    ElapsedTime botonA = new ElapsedTime();
+    ElapsedTime botonB = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -57,6 +60,8 @@ public class PruebaGarra extends LinearOpMode {
         dpadAbajo.reset();
         dpadIzquierda.reset();
         dpadDerecha.reset();
+        botonA.reset();
+        botonB.reset();
 
         brazo = hardwareMap.dcMotor.get("br");
         codo = hardwareMap.servo.get("cd");
@@ -69,6 +74,7 @@ public class PruebaGarra extends LinearOpMode {
         double codoPos = 0;
         double manoPos = 0;
 
+        int positionGoal = 0;
         while (opModeIsActive()) {
 
             double brazoPower = 0.0;
@@ -79,6 +85,17 @@ public class PruebaGarra extends LinearOpMode {
                 brazoPower = gamepad1.left_trigger;
             }
 
+            if (gamepad1.a && botonA.milliseconds() > 300)
+            {
+                positionGoal += 100;
+                botonA.reset();
+            }
+
+            if (gamepad1.b && botonB.milliseconds() > 300)
+            {
+                positionGoal -= 100;
+                botonB.reset();
+            }
 
             if (gamepad1.dpad_up && dpadArriba.milliseconds() > 300) {
                 codoPos += 0.1;
@@ -101,12 +118,22 @@ public class PruebaGarra extends LinearOpMode {
                 dpadIzquierda.reset();
             }
 
+
+            int error = positionGoal - brazo.getCurrentPosition();
+            brazoPower = error * 0.01;
+
             codoPos = Range.clip(codoPos,0.0,1.0);
             manoPos = Range.clip(manoPos, 0.0, 1.0);
+            brazoPower = Range.clip(brazoPower, -1.0, 1.0);
 
-            telemetry.addData("Brazo Power: ", brazoPower);
+
+
+
+
             telemetry.addData("Codo Pos: ", codoPos);
             telemetry.addData("Mano Pos: ", manoPos);
+            telemetry.addData("Brazo Power: ", brazoPower);
+            telemetry.addData("Error: ", error);
             telemetry.update();
 
             codo.setPosition(codoPos);
